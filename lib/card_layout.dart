@@ -40,7 +40,7 @@ class CardLayout extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(child: Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),), margin: EdgeInsets.all(5),),
-                      Container(child: Row(children:[ Icon(Icons.currency_rupee, color: Colors.amber,size: 12,),Text(price.toString(), style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: Colors.blue),)]), margin: EdgeInsets.all(5)),
+                      Container(child: Row(children:[ Icon(Icons.currency_rupee, color: Theme.of(context).primaryColor,size: 12,),Text(price.toString(), style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12, color: Colors.blue),)]), margin: EdgeInsets.all(5)),
                     ],
                   ),
                 ),

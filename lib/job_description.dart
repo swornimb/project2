@@ -11,24 +11,32 @@ class JobDescription extends StatelessWidget {
     String dscription = routsArgs['description'].toString();
     String title = routsArgs['title'].toString();
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Raleway'
+      ),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-        ),
         body: Container(
           child:Column(
             children: [
+
               Container(
+                margin: EdgeInsets.only(bottom: 10),
                 child: Image.network(imagelink, fit: BoxFit.cover, height: 200, width: double.infinity,)
               ),
               Container(
-                margin: EdgeInsets.all(20),
-                alignment: Alignment.center,
-                child: Text(dscription),
+                margin: EdgeInsets.symmetric(vertical:10, horizontal: 20),
+                alignment: Alignment.centerLeft,
+                child: Text(title, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                margin: EdgeInsets.symmetric(vertical:10, horizontal: 20),
+                alignment: Alignment.center,
+                child: Text(dscription, style: TextStyle(color: Colors.black54, height: 1.5),),
+
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 alignment: Alignment.centerLeft,
                 child: TextButton(
                   onPressed: (){},

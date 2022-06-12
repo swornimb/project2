@@ -4,6 +4,7 @@ import 'package:project2/request_dart.dart';
 import './card_layout.dart';
 import './data_list.dart';
 import './user_details.dart';
+import './opening_form.dart';
 
 void main() {
   runApp( MyApp());
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
 
           body: TabBarView(
           children: [
-            Text("This is tab Bar"),
+            UserForm(),
             Container(
               child: ListView.builder(
                 itemCount: JobList.length,
@@ -46,10 +47,17 @@ class MyApp extends StatelessWidget {
           ],
           )
 
-
-
-
         ),
+      ),
+      theme: ThemeData(
+        fontFamily: 'Raleway',
+        primarySwatch: Colors.blue,
+        primaryTextTheme: TextTheme(
+          headline1: TextStyle(
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
+          ),
+        )
       ),
       routes:{
         './job-description':(ctx)=>JobDescription()
