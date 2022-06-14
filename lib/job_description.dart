@@ -16,8 +16,10 @@ class JobDescription extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Container(
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child:Column(
+
             children: [
 
               Container(
@@ -28,6 +30,16 @@ class JobDescription extends StatelessWidget {
                 margin: EdgeInsets.symmetric(vertical:10, horizontal: 20),
                 alignment: Alignment.centerLeft,
                 child: Text(title, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 16)),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                alignment: Alignment.centerLeft,
+                child: InkWell(
+                  child: Text("Swornim Bhattarai"),
+                  onTap: (){
+                    Navigator.of(context).pushNamed('./user-details');
+                  },
+                ),
               ),
               Container(
                 margin: EdgeInsets.symmetric(vertical:10, horizontal: 20),

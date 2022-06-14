@@ -5,12 +5,19 @@ import './card_layout.dart';
 import './data_list.dart';
 import './user_details.dart';
 import './opening_form.dart';
+import 'JobDetails.dart';
 
 void main() {
   runApp( MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +39,15 @@ class MyApp extends StatelessWidget {
 
           body: TabBarView(
           children: [
-            UserForm(),
-            Container(
-              child: ListView.builder(
-                itemCount: JobList.length,
-                itemBuilder: (BuildContext context, int index){
-                  return Container(
-                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    child:CardLayout(id: JobList[index].id,title: JobList[index].title, price: JobList[index].price, imagelink: JobList[index].image, description: JobList[index].description,),
-                  );
-                },
-              ),
+            UserForm(
+                (mytitle, myprice, mydescription){
+                  setState(() {
+                    JobList.add(JobDetails(id: 'l${JobList.length+1}', title: mytitle, image:'https://cdn.pixabay.com/photo/2017/12/25/16/16/creativity-3038628_960_720.jpg', price: myprice , description: mydescription));
+
+                  });
+                }
             ),
+            CardLayout(JobList)
           ],
           )
 
@@ -60,7 +64,9 @@ class MyApp extends StatelessWidget {
         )
       ),
       routes:{
-        './job-description':(ctx)=>JobDescription()
+        './job-description':(ctx)=>JobDescription(),
+        './user-details':(ctx)=>UserDetails(),
+        './job-request':(ctx)=>RequestDetailsScreen(),
       },
     );
   }

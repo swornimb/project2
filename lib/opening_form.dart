@@ -1,16 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:project2/JobDetails.dart';
 
-class UserForm extends StatefulWidget {
-  const UserForm({Key? key}) : super(key: key);
 
-  @override
-  State<UserForm> createState() => _UserFormState();
-}
 
-class _UserFormState extends State<UserForm> {
+
+class UserForm extends StatelessWidget {
+
+  final Function addonList;
+  UserForm(this.addonList);
+
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
+
+  String _mytitle="";
+  String mydescription="";
+  String myprice="";
+  String mydate="";
+  titleInput(String value){
+    _mytitle = value;
+  }
+  descriptionInput(String value){
+    mydescription = value;
+  }
+  priceInput(String value){
+    myprice = value;
+  }
+  dateInput(String value){
+    mydate = value;
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Form(
       key: _formkey,
       child: Card(
@@ -20,10 +41,10 @@ class _UserFormState extends State<UserForm> {
           padding: EdgeInsets.all(10),
             child: ListView(
                 children: [
-
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         child: TextFormField(
+                          onChanged: titleInput,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             label: Text("Job Title"),
@@ -41,6 +62,7 @@ class _UserFormState extends State<UserForm> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         child: TextFormField(
+                            onChanged: descriptionInput,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               label: Text("Job Description")
@@ -74,6 +96,9 @@ class _UserFormState extends State<UserForm> {
                               borderRadius: BorderRadius.circular(50),
                               onTap: ()async{
                                 final DateTime? date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100));
+                                setState(){
+                                  String mydate = date.toString();
+                                }
                               },
                               child: Icon(Icons.calendar_month, color: Colors.white,),
                             ),
@@ -83,13 +108,15 @@ class _UserFormState extends State<UserForm> {
                         Flexible(
                           flex: 1,
                           child: TextFormField(
+                            keyboardType: TextInputType.number,
+                              onChanged: priceInput,
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   label: Text("Price")
                               ),
                               validator:(String? value){
                                 if(value == null || value.isEmpty){
-                                  return "Please enter Description";
+                                  return "Please enter Price";
                                 }else{
                                   return null;
                                 }
@@ -100,15 +127,18 @@ class _UserFormState extends State<UserForm> {
                               flex: 1,
                               child: ElevatedButton(
                               style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 20, vertical: 20))),
-                              onPressed: (){},
+                              onPressed: (){
+                                if(_formkey.currentState!.validate()){
+                                  print("no error");
+                                }
+                                addonList(_mytitle, myprice, mydescription);
+                              },
                               child: Text("Submit", style:TextStyle(fontWeight: FontWeight.bold)),
 
                         ),
                             ),
                       ],
                     ),
-
-
                   ),
 
                     ],
