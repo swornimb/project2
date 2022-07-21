@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "307364843752",
+    "project_id": "jobfinder-c2051",
+    "storage_bucket": "jobfinder-c2051.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:307364843752:android:fa3cb338f61d7004d8395d",
+        "android_client_info": {
+          "package_name": "com.swornim.project2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "307364843752-6skandlq5edjhml4keeia3n7si6oj0bi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU_HyyMy_VBE5hSSHxQvQvfP_6HAdUFec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "307364843752-6skandlq5edjhml4keeia3n7si6oj0bi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

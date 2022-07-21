@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project2/JobDetails.dart';
+import 'package:project2/models/JobDetails.dart';
+import '../datas/user_list.dart';
 
 class CardLayout extends StatefulWidget {
 
@@ -13,7 +14,7 @@ class CardLayout extends StatefulWidget {
 
 class _CardLayoutState extends State<CardLayout> {
   void selectedJob(BuildContext ctx, int index){
-    Navigator.of(ctx).pushNamed('./job-description', arguments: {'id':widget.joblist[index].id, 'imagelink': widget.joblist[index].image, 'price': widget.joblist[index].price, 'title': widget.joblist[index].title, 'description': widget.joblist[index].description});
+    Navigator.of(ctx).pushNamed('./job-description', arguments: {'id':widget.joblist[index].id, 'imagelink': widget.joblist[index].image, 'price': widget.joblist[index].price, 'title': widget.joblist[index].title, 'description': widget.joblist[index].description, 'userid': widget.joblist[index].userid});
   }
 
   @override

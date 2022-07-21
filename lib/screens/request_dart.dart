@@ -11,7 +11,7 @@ class RequestDetailsScreen extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: Text("Job Requests"),),
         body: ListView(
-          children: new List.generate(80, (index) => new Container(
+          children:  List.generate(80, (index) =>  Container(
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

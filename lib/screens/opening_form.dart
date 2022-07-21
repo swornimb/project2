@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project2/JobDetails.dart';
+import 'package:project2/models/JobDetails.dart';
 
 
 
@@ -132,19 +132,16 @@ class UserForm extends StatelessWidget {
                                   addonList(_mytitle, myprice, mydescription);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text('Processing Data')),
+                                    content: Text('Data Stored')),
                               );
                                 }
-
                               },
-                              child: Text("Submit", style:TextStyle(fontWeight: FontWeight.bold)),
-
+                              child: Text("Submit", style:TextStyle(fontWeight: FontWeight.bold))
                         ),
                             ),
                       ],
                     ),
                   ),
-
                     ],
                   )
         ),
