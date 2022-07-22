@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class JobDetails {
   String id;
   String title;
@@ -13,4 +15,14 @@ class JobDetails {
       required this.price,
       required this.description,
       required this.userid});
+
+  factory JobDetails.fromjson(Map response) {
+    return JobDetails(
+        id: response['id'],
+        title: response["title"],
+        image: response["image"],
+        price: response["price"],
+        description: response["description"],
+        userid: response["userid"]);
+  }
 }

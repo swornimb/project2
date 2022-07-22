@@ -1,5 +1,6 @@
+
+
 import 'package:flutter/material.dart';
-import 'package:project2/models/JobDetails.dart';
 
 
 
@@ -8,6 +9,10 @@ class UserForm extends StatelessWidget {
 
   final Function addonList;
   UserForm(this.addonList);
+
+
+
+  
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
@@ -128,6 +133,7 @@ class UserForm extends StatelessWidget {
                               child: ElevatedButton(
                               style: ButtonStyle(padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 20, vertical: 20))),
                               onPressed: (){
+                                
                                 if(_formkey.currentState!.validate()){
                                   addonList(_mytitle, myprice, mydescription);
                                   ScaffoldMessenger.of(context).showSnackBar(
