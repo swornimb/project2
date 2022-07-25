@@ -1,6 +1,6 @@
-import 'dart:html';
+
 import '../models/JobDetails.dart';
-import '../logics/jobs/post.dart';
+
 
 
 

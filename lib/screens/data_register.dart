@@ -1,11 +1,13 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project2/logics/register/post.dart';
 import '../datas/skill_list.dart';
 // Imports all Widgets included in [multiselect] package
 import 'package:multiselect/multiselect.dart';
-
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -15,38 +17,42 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
   List<String> selected = [];
 
   int activeStep = 0;
   int upperBound = 1;
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  String _mytitle = "";
-  String mydescription = "";
-
-  titleInput(String value) {
-    _mytitle = value;
-  }
-
-  descriptionInput(String value) {
-    mydescription = value;
-  }
+  final fullname = TextEditingController();
+  final descriptionInput = TextEditingController();
+  final location = TextEditingController();
+  final email = TextEditingController();
 
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
   void _pickImage() async {
     try {
       final pickedfile = await _picker.pickImage(source: ImageSource.gallery);
+      print(pickedfile!.path);
       setState(() {
-        _imageFile = File(pickedfile!.path);
+        _imageFile = File(pickedfile.path);
+        imagename = File(pickedfile.name);
       });
     } catch (e) {
       print(e);
     }
   }
 
+  var imageUrl;
+  var imagename;
+
   @override
+  void dispose() {
+    fullname.dispose();
+    descriptionInput.dispose();
+    location.dispose();
+    email.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +66,7 @@ class _RegisterState extends State<Register> {
                 Icons.supervised_user_circle,
                 color: Colors.white,
               ),
-              Icon(Icons.work , color: Colors.white),
+              Icon(Icons.work, color: Colors.white),
             ],
             activeStep: activeStep,
             enableNextPreviousButtons: false,
@@ -108,7 +114,8 @@ class _RegisterState extends State<Register> {
               padding: MaterialStateProperty.all(EdgeInsets.all(20)),
             ),
             onPressed: () {
-              // Increment activeStep, when the next button is tapped. However, check for upper bound.
+              postRegiterData(fullname.text, descriptionInput.text,
+                  location.text, email.text, selected, imageUrl, FirebaseAuth.instance.currentUser!.uid);
             },
             child: Text('Send Data'),
           );
@@ -139,10 +146,8 @@ class _RegisterState extends State<Register> {
         return firstForm();
       case 1:
         return secondPage();
-      case 2:
-        return Text("QQQ");
       default:
-        return Text("ccc");
+        return Text("You met some error");
     }
   }
 
@@ -154,24 +159,17 @@ class _RegisterState extends State<Register> {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: TextFormField(
-              onChanged: titleInput,
-              decoration: InputDecoration(
+              controller: fullname,
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 label: Text("Full Name"),
               ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter Full Name";
-                } else {
-                  return null;
-                }
-              },
             ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: TextFormField(
-                onChanged: descriptionInput,
+                controller: descriptionInput,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("Job Description")),
@@ -188,6 +186,7 @@ class _RegisterState extends State<Register> {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
                   child: Icon(Icons.image),
@@ -206,7 +205,25 @@ class _RegisterState extends State<Register> {
                           _imageFile!,
                           fit: BoxFit.cover,
                         ),
-                      )
+                      ),
+                Container(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        final _storage = FirebaseStorage.instance;
+                        var snapshot = await _storage
+                            .ref()
+                            .child('profile_photo/$imagename')
+                            .putFile(_imageFile!);
+
+                        snapshot.ref
+                            .getDownloadURL()
+                            .then((value) => setState(() {
+                                  imageUrl = value;
+                                }));
+                      },
+                      child: Text("Upload")),
+                )
               ],
             ),
           ),
@@ -219,51 +236,51 @@ class _RegisterState extends State<Register> {
     return Column(
       children: [
         Padding(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: TextFormField(
-              onChanged: titleInput,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text("Email"),
-              ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter Email";
-                } else {
-                  return null;
-                }
-              },
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          child: TextFormField(
+            controller: email,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              label: Text("Email"),
             ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Please enter Email";
+              } else {
+                return null;
+              }
+            },
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: TextFormField(
-              onChanged: titleInput,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text("Location"),
-              ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter your location";
-                } else {
-                  return null;
-                }
-              },
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          child: TextFormField(
+            controller: location,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              label: Text("Location"),
             ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Please enter your location";
+              } else {
+                return null;
+              }
+            },
           ),
+        ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           child: DropDownMultiSelect(
-          onChanged: (List<String> x) {
-            setState(() {
-              selected = x;
-            });
-          },
-          options: skills,
-          selectedValues: selected,
-          whenEmpty: 'Select your skills',
-              ),
+            onChanged: (List<String> x) {
+              setState(() {
+                selected = x;
+              });
+            },
+            options: skills,
+            selectedValues: selected,
+            whenEmpty: 'Select your skills',
+          ),
         ),
       ],
     );

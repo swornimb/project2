@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:project2/models/JobDetails.dart';
@@ -15,7 +16,7 @@ Future<void> postData(mytitle, myprice, mydescription) async {
             'https://cdn.pixabay.com/photo/2017/12/25/16/16/creativity-3038628_960_720.jpg',
         "price": myprice,
         "description": mydescription,
-        "userid": 'u2'
+        "userid": FirebaseAuth.instance.currentUser!.uid
       }));
 }
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project2/logics/register/post.dart';
 import 'package:project2/screens/job_description.dart';
 import 'package:project2/screens/request_dart.dart';
 import 'package:project2/screens/sign_in.dart';
@@ -18,12 +19,17 @@ import 'package:http/http.dart' as http;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
+      name: "JobFinder",
       options: const FirebaseOptions(
-          apiKey: "AIzaSyCU_HyyMy_VBE5hSSHxQvQvfP_6HAdUFec",
-          appId: "1:307364843752:android:fa3cb338f61d7004d8395d",
-          messagingSenderId: "307364843752",
-          projectId: "jobfinder-c2051"));
+        apiKey: "AIzaSyCU_HyyMy_VBE5hSSHxQvQvfP_6HAdUFec",
+        appId: "1:307364843752:android:fa3cb338f61d7004d8395d",
+        messagingSenderId: "307364843752",
+        projectId: "jobfinder-c2051",
+        storageBucket: "gs://jobfinder-c2051.appspot.com",
+      ));
+
   runApp(MyApp());
 }
 
@@ -55,11 +61,15 @@ class _MyAppState extends State<MyApp> {
                     title: Text("Project 2"),
                     actions: [
                       IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Register()));
+                          onPressed: () async {
+                            var data = await getDataRegister();
+                                data.isNotEmpty? Navigator.pushNamed(
+                                    context, './screens/user-details',
+                                    arguments: data)
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Register()));
                           },
                           icon: Icon(Icons.person)),
                       IconButton(
@@ -87,13 +97,13 @@ class _MyAppState extends State<MyApp> {
                         postData(mytitle, myprice, mydescription);
                         setState(() {
                           JobList.add(JobDetails(
-                              id: 'l${JobList.length + 1}',
+                              id: 'lmno-${JobList.length + 1}-qrst',
                               title: mytitle,
                               image:
                                   'https://cdn.pixabay.com/photo/2017/12/25/16/16/creativity-3038628_960_720.jpg',
                               price: myprice,
                               description: mydescription,
-                              userid: 'u2'));
+                              userid: FirebaseAuth.instance.currentUser!.uid));
                         });
                       }),
                       FutureBuilder<Map>(
@@ -107,7 +117,6 @@ class _MyAppState extends State<MyApp> {
                             Map? response = snapshot.data;
                             List<JobDetails> JobList = [];
                             response!.forEach((key, value) {
-                              print(key);
                               JobList.add(JobDetails.fromjson(value));
                             });
                             return CardLayout(JobList);

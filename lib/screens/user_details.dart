@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
-import '../datas/user_list.dart';
 
 class UserDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final dataArgs =
-        ModalRoute.of(context)?.settings.arguments as Map<String, Object>;
-    var userid = dataArgs['userid'];
-    var myuserid = UserDatas.firstWhere((element) => userid == element.user_id);
+    Map dataArgs = ModalRoute.of(context)?.settings.arguments as Map;
+
+    List x = dataArgs.values.toList();
+
+
     return MaterialApp(
       theme: ThemeData(fontFamily: 'Raleway'),
       debugShowCheckedModeBanner: false,
@@ -36,19 +36,17 @@ class UserDetails extends StatelessWidget {
                       decoration: BoxDecoration(
                           border: Border.all(width: 1, color: Colors.blue),
                           borderRadius: BorderRadius.circular(10)),
-                      child: Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/1024px-User-avatar.svg.png')),
+                      child: Image.network(x[0]['imageurl'])),
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.symmetric(vertical: 20),
-                    child: Text(myuserid.user_name,
+                    child: Text("Description",
                         style: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 16)),
                   ),
-                  Text(
-                    myuserid.user_bio,
+                  Text(x[0]['description'],
                     style: TextStyle(color: Colors.black54, height: 1.5),
                   ),
                   Container(
@@ -64,7 +62,7 @@ class UserDetails extends StatelessWidget {
                     spacing: 10,
                     runSpacing: 10,
                     children: [
-                      for (var i in myuserid.user_skills)
+                      for (var i in x[0]['skills'])
                         Badge(
                           badgeContent: Text(
                             i,
@@ -87,33 +85,33 @@ class UserDetails extends StatelessWidget {
                           fontSize: 16),
                     ),
                   ),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      for(var i in myuserid.user_work)
-                      Badge(
-                        badgeContent: Wrap(
-                          children: [
-                            Badge(
-                              shape: BadgeShape.circle,
-                              badgeContent: Text(i['count']),
-                              padding: EdgeInsets.all(10),
-                            ),
-                            Container(
-                              child: Text(i['job']),
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                            )
-                          ],
-                          alignment: WrapAlignment.center,
-                        ),
-                        badgeColor: Colors.blue,
-                        shape: BadgeShape.square,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ],
-                  )
+                  // Wrap(
+                  //   spacing: 10,
+                  //   runSpacing: 10,
+                  //   children: [
+                  //     for(var i in myuserid.user_work)
+                  //     Badge(
+                  //       badgeContent: Wrap(
+                  //         children: [
+                  //           Badge(
+                  //             shape: BadgeShape.circle,
+                  //             badgeContent: Text(i['count']),
+                  //             padding: EdgeInsets.all(10),
+                  //           ),
+                  //           Container(
+                  //             child: Text(i['job']),
+                  //             margin: EdgeInsets.symmetric(
+                  //                 horizontal: 10, vertical: 10),
+                  //           )
+                  //         ],
+                  //         alignment: WrapAlignment.center,
+                  //       ),
+                  //       badgeColor: Colors.blue,
+                  //       shape: BadgeShape.square,
+                  //       borderRadius: BorderRadius.circular(5),
+                  //     ),
+                  //   ],
+                  // )
                 ],
               ),
             ),
