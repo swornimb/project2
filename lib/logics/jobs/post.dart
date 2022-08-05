@@ -4,13 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:project2/models/JobDetails.dart';
 
-Future<void> postData(mytitle, myprice, mydescription) async {
+Future<void> postData(id, mytitle, myprice, mydescription) async {
   var url = Uri.parse(
       'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/add_jobs.json');
 
   var response = await http.post(url,
       body: json.encode({
-        "id": 'lfdsfds',
+        "id": id,
         "title": mytitle,
         "image":
             'https://cdn.pixabay.com/photo/2017/12/25/16/16/creativity-3038628_960_720.jpg',
@@ -20,13 +20,42 @@ Future<void> postData(mytitle, myprice, mydescription) async {
       }));
 }
 
-Future <Map> getData() async {
+Future<Map> getData() async {
   var url = Uri.parse(
     'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/add_jobs.json',
   );
-  var response =
-      await http.get(url, headers: {"Content-Type": "application/json"});
-
+  var response = await http.get(url);
+  print("object");
   Map jsonData = jsonDecode(response.body);
   return jsonData;
+}
+
+Future<Map> getDataSpecific(id) async {
+  var url = Uri.parse(
+    'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/add_jobs.json?orderBy="id"&equalTo="${id}"',
+  );
+  var response = await http.get(url);
+  Map payload = jsonDecode(response.body);
+  return payload;
+}
+
+Future<void> putData(id, mytitle, myprice, mydescription, keyy) async {
+  var url = Uri.parse(
+      'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/add_jobs/${keyy}/.json');
+  print(url);
+  var response = await http.patch(url,
+      body: jsonEncode({
+        "title": mytitle,
+        "price": myprice,
+        "description": mydescription,
+      }));
+  print(response.body);
+}
+
+deleteData(id) async {
+  var url = Uri.parse(
+    'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/add_jobs/${id.toString()}.json?x-http-method-override=DELETE',
+  );
+  print(url);
+  var response = await http.delete(url);
 }

@@ -20,7 +20,7 @@ Future<void> postRegiterData(fullname, descriptionInput, location, email,
 
 Future<Map> getDataRegister() async {
   final data = await http.get(Uri.parse(
-      'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/registers.json?uid=${FirebaseAuth.instance.currentUser!.uid}'));
+      'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/registers.json?orderBy="uid"&equalTo="${FirebaseAuth.instance.currentUser!.uid}"'));
   Map jsonDataRgister = jsonDecode(data.body);
   return jsonDataRgister;
 }

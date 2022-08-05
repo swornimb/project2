@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
+import 'package:project2/logics/user_specific/post.dart';
+import 'package:project2/models/JobDetails.dart';
+import 'package:project2/screens/card_layout.dart';
 
 class UserDetails extends StatelessWidget {
+  List<JobDetails> userjob = [];
   @override
   Widget build(BuildContext context) {
     Map dataArgs = ModalRoute.of(context)?.settings.arguments as Map;
-
     List x = dataArgs.values.toList();
-
-
     return MaterialApp(
       theme: ThemeData(fontFamily: 'Raleway'),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(title: Text("User Details"), actions: [
+          IconButton(
+              onPressed: ()  {
+                  Navigator.pushNamed(context, './userFuture',
+                      arguments: userjob);
+              },
+              icon: Icon(Icons.list)),
           IconButton(
               icon: Icon(Icons.favorite_border_outlined),
               onPressed: () {
@@ -46,7 +53,8 @@ class UserDetails extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: 16)),
                   ),
-                  Text(x[0]['description'],
+                  Text(
+                    x[0]['description'],
                     style: TextStyle(color: Colors.black54, height: 1.5),
                   ),
                   Container(

@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:project2/logics/register/post.dart';
+import 'package:project2/logics/user_specific/post.dart';
 import 'package:project2/screens/job_description.dart';
+import 'package:project2/screens/opening_form_edit.dart';
 import 'package:project2/screens/request_dart.dart';
 import 'package:project2/screens/sign_in.dart';
 import 'screens/card_layout.dart';
@@ -15,6 +18,7 @@ import 'screens/loading.dart';
 import './screens/data_register.dart';
 import 'models/JobDetails.dart';
 import './logics/jobs/post.dart';
+import './screens/user_specific.dart';
 import 'package:http/http.dart' as http;
 
 Future main() async {
@@ -39,11 +43,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  data() {
+    setState(() {
+      getData();
+    });
+    return getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: Register(),
+      // home: EditOpeningForm(),
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -63,13 +74,19 @@ class _MyAppState extends State<MyApp> {
                       IconButton(
                           onPressed: () async {
                             var data = await getDataRegister();
-                                data.isNotEmpty? Navigator.pushNamed(
+                            print(data);
+
+                            data.isNotEmpty
+                                // ignore: use_build_context_synchronously
+                                ? Navigator.pushNamed(
                                     context, './screens/user-details',
                                     arguments: data)
+                                // ignore: use_build_context_synchronously
                                 : Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Register()));
+                                        builder: (context) =>
+                                            const Register()));
                           },
                           icon: Icon(Icons.person)),
                       IconButton(
@@ -93,11 +110,11 @@ class _MyAppState extends State<MyApp> {
                   ),
                   body: TabBarView(
                     children: [
-                      UserForm((mytitle, myprice, mydescription) {
-                        postData(mytitle, myprice, mydescription);
+                      UserForm((id, mytitle, myprice, mydescription) {
+                        postData(id, mytitle, myprice, mydescription);
                         setState(() {
                           JobList.add(JobDetails(
-                              id: 'lmno-${JobList.length + 1}-qrst',
+                              id: id,
                               title: mytitle,
                               image:
                                   'https://cdn.pixabay.com/photo/2017/12/25/16/16/creativity-3038628_960_720.jpg',
@@ -106,21 +123,25 @@ class _MyAppState extends State<MyApp> {
                               userid: FirebaseAuth.instance.currentUser!.uid));
                         });
                       }),
-                      FutureBuilder<Map>(
-                          future: getData(),
-                          builder: ((context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                            Map? response = snapshot.data;
-                            List<JobDetails> JobList = [];
-                            response!.forEach((key, value) {
-                              JobList.add(JobDetails.fromjson(value));
-                            });
-                            return CardLayout(JobList);
-                          })),
+                      RefreshIndicator(
+                          onRefresh: () {
+                            return data();
+                          },
+                          child: FutureBuilder<Map>(
+                              future: getData(),
+                              builder: ((context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                Map? response = snapshot.data;
+                                List<JobDetails> JobList = [];
+                                response!.forEach((key, value) {
+                                  JobList.add(JobDetails.fromjson(value));
+                                });
+                                return CardLayout(JobList);
+                              })))
                     ],
                   )),
             );
@@ -139,7 +160,9 @@ class _MyAppState extends State<MyApp> {
       routes: {
         './job-description': (ctx) => JobDescription(),
         './screens/user-details': (ctx) => UserDetails(),
-        './screens/job-request': (ctx) => const RequestDetailsScreen(),
+        './screens/job-request': (ctx) =>  RequestDetailsScreen(),
+        './userFuture': (ctx) => UserSpecific(),
+        './foredit': (ctx) => EditOpeningForm(),
       },
     );
   }

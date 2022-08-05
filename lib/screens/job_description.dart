@@ -1,21 +1,27 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project2/logics/friend_request.dart/post.dart';
 import 'package:project2/models/JobDetails.dart';
 import '../datas/jobs_list.dart';
 import '../datas/user_list.dart';
+import 'package:http/http.dart' as http;
 
-class JobDescription extends StatelessWidget {
+class JobDescription extends StatefulWidget {
+  @override
+  State<JobDescription> createState() => _JobDescriptionState();
+}
+
+class _JobDescriptionState extends State<JobDescription> {
+  String? myname;
+  String? keyy;
+
   @override
   Widget build(BuildContext context) {
-    final routsArgs =
-        ModalRoute.of(context)?.settings.arguments as Map<String, Object>;
-    String jobid = routsArgs['id'].toString();
-    String imagelink = routsArgs['imagelink'].toString();
-    String dscription = routsArgs['description'].toString();
-    String title = routsArgs['title'].toString();
-    String userid = routsArgs['userid'].toString();
-
-    var user = UserDatas.firstWhere((element) => element.user_id == userid);
+    JobDetails routsArgs =
+        ModalRoute.of(context)?.settings.arguments as JobDetails;
     return MaterialApp(
       theme: ThemeData(fontFamily: 'Raleway'),
       debugShowCheckedModeBanner: false,
@@ -27,7 +33,7 @@ class JobDescription extends StatelessWidget {
               Container(
                   margin: EdgeInsets.only(bottom: 10),
                   child: Image.network(
-                    imagelink,
+                    routsArgs.image,
                     fit: BoxFit.cover,
                     height: 200,
                     width: double.infinity,
@@ -35,7 +41,7 @@ class JobDescription extends StatelessWidget {
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 alignment: Alignment.centerLeft,
-                child: Text(title,
+                child: Text(routsArgs.title,
                     style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,
@@ -45,9 +51,10 @@ class JobDescription extends StatelessWidget {
                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 alignment: Alignment.centerLeft,
                 child: InkWell(
-                  child: Text(user.user_name),
+                  child: Text(routsArgs.userid),
                   onTap: () {
-                    Navigator.of(context).pushNamed('./screens/user-details', arguments: {'userid':userid});
+                    Navigator.of(context).pushNamed('./screens/user-details',
+                        arguments: {'userid': routsArgs.userid});
                   },
                 ),
               ),
@@ -55,7 +62,7 @@ class JobDescription extends StatelessWidget {
                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 alignment: Alignment.center,
                 child: Text(
-                  dscription,
+                  routsArgs.description,
                   style: TextStyle(color: Colors.black54, height: 1.5),
                 ),
               ),
@@ -63,7 +70,30 @@ class JobDescription extends StatelessWidget {
                 margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 alignment: Alignment.centerLeft,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    var url = Uri.parse(
+                        'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/registers.json?orderBy="uid"&equalTo="${FirebaseAuth.instance.currentUser!.uid}"');
+                    var data = await http.get(url);
+                    Map payload = jsonDecode(data.body);
+
+                    payload.forEach((key, value) {
+                      print(value['name']);
+                      setState(() {
+                        keyy = key.toString();
+                        myname = value['name'];
+                      });
+                    });
+                    Map alldata = {
+                      'datakey': keyy,
+                      'userid': routsArgs.userid,
+                      'jobid': routsArgs.id,
+                      'requesterId': FirebaseAuth.instance.currentUser!.uid,
+                      'name': myname,
+                      'jobname': routsArgs.title,
+                      'statue': 'pending'
+                    };
+                    friendRequestpost(alldata);
+                  },
                   child: Text("Apply Job"),
                   style: TextButton.styleFrom(
                       padding:
