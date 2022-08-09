@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,6 +7,7 @@ import 'package:im_stepper/stepper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:project2/logics/register/post.dart';
 import '../datas/skill_list.dart';
+import 'package:http/http.dart' as http;
 // Imports all Widgets included in [multiselect] package
 import 'package:multiselect/multiselect.dart';
 
@@ -51,6 +53,7 @@ class _RegisterState extends State<Register> {
     descriptionInput.dispose();
     location.dispose();
     email.dispose();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -113,9 +116,24 @@ class _RegisterState extends State<Register> {
             style: ButtonStyle(
               padding: MaterialStateProperty.all(EdgeInsets.all(20)),
             ),
-            onPressed: () {
-              postRegiterData(fullname.text, descriptionInput.text,
-                  location.text, email.text, selected, imageUrl, FirebaseAuth.instance.currentUser!.uid);
+            onPressed: () async {
+              var api_data = await http.get(Uri.parse(
+                  'https://us1.locationiq.com/v1/search?key=pk.fdc8ba3c9338224bd6109a72d94d7bc7&q=${location.text}&format=json'));
+              List alldata = jsonDecode(api_data.body);
+              print(
+                  'https://us1.locationiq.com/v1/search?key=pk.fdc8ba3c9338224bd6109a72d94d7bc7&q=${location.text}&format=json');
+              print(alldata.first['lat']);
+                postRegiterData(
+                    fullname.text,
+                    descriptionInput.text,
+                    location.text,
+                    email.text,
+                    selected,
+                    imageUrl,
+                    FirebaseAuth.instance.currentUser!.uid,
+                    alldata.first['lon'],
+                    alldata.first['lat'],
+                    );
             },
             child: Text('Send Data'),
           );

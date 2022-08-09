@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:project2/models/JobDetails.dart';
 
-Future<void> postData(id, mytitle, myprice, mydescription) async {
+Future<void> postData(id, mytitle, myprice, mydescription,location, latitude, longitude) async {
   var url = Uri.parse(
       'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/add_jobs.json');
 
@@ -16,7 +16,11 @@ Future<void> postData(id, mytitle, myprice, mydescription) async {
             'https://cdn.pixabay.com/photo/2017/12/25/16/16/creativity-3038628_960_720.jpg',
         "price": myprice,
         "description": mydescription,
-        "userid": FirebaseAuth.instance.currentUser!.uid
+        "userid": FirebaseAuth.instance.currentUser!.uid,
+        'location': location,
+        "lat":latitude,
+        'lon': longitude,
+        
       }));
 }
 
@@ -25,7 +29,6 @@ Future<Map> getData() async {
     'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/add_jobs.json',
   );
   var response = await http.get(url);
-  print("object");
   Map jsonData = jsonDecode(response.body);
   return jsonData;
 }
@@ -39,10 +42,10 @@ Future<Map> getDataSpecific(id) async {
   return payload;
 }
 
+
 Future<void> putData(id, mytitle, myprice, mydescription, keyy) async {
   var url = Uri.parse(
       'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/add_jobs/${keyy}/.json');
-  print(url);
   var response = await http.patch(url,
       body: jsonEncode({
         "title": mytitle,
@@ -56,6 +59,5 @@ deleteData(id) async {
   var url = Uri.parse(
     'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/add_jobs/${id.toString()}.json?x-http-method-override=DELETE',
   );
-  print(url);
   var response = await http.delete(url);
 }

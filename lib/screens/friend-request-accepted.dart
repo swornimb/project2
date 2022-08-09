@@ -10,7 +10,6 @@ class FriendRequestAccpted extends StatelessWidget {
     return ListView.builder(
         itemCount: request.length,
         itemBuilder: (BuildContext context, index) {
-          print(request[index]['statue']);
           return Card(
             child: Column(children: [
               Container(

@@ -7,6 +7,7 @@ class EditOpeningForm extends StatelessWidget {
   String mydescription = "";
   String myprice = "";
   String mydate = "";
+  String mylocation = "";
   titleInput(String value) {
     _mytitle = value;
   }
@@ -19,6 +20,10 @@ class EditOpeningForm extends StatelessWidget {
     myprice = value;
   }
 
+  locationInput(String value) {
+    mylocation = value;
+  }
+
   dateInput(String value) {
     mydate = value;
   }
@@ -27,6 +32,7 @@ class EditOpeningForm extends StatelessWidget {
   late String title;
   late String description;
   late String price;
+  late String location;
   late String keyy;
 
   @override
@@ -39,6 +45,7 @@ class EditOpeningForm extends StatelessWidget {
         title = value['title'];
         description = value['description'];
         price = value['price'];
+        location = value['location'];
       },
     );
     return Form(
@@ -68,6 +75,18 @@ class EditOpeningForm extends StatelessWidget {
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         label: Text("Job Description")),
+                    minLines: 5,
+                    maxLines: 50,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: TextFormField(
+                    onChanged: locationInput,
+                    initialValue: location,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        label: Text("Location")),
                     minLines: 5,
                     maxLines: 50,
                   ),
@@ -120,7 +139,8 @@ class EditOpeningForm extends StatelessWidget {
                                     EdgeInsets.symmetric(
                                         horizontal: 20, vertical: 20))),
                             onPressed: () {
-                              putData(id, _mytitle, myprice, mydescription,keyy);
+                              putData(
+                                  id, _mytitle, myprice, mydescription, keyy);
                             },
                             child: Text("Submit",
                                 style: TextStyle(fontWeight: FontWeight.bold))),

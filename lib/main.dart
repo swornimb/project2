@@ -19,10 +19,15 @@ import './screens/data_register.dart';
 import 'models/JobDetails.dart';
 import './logics/jobs/post.dart';
 import './screens/user_specific.dart';
+import 'dart:math' show cos, sqrt, asin;
 import 'package:http/http.dart' as http;
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  Stripe.publishableKey =
+      "pk_test_51LUYzLSCgSEsIpqaMTj5E4jCl7xDNBO3lDBr1JmBZHILu5F6DDeghDkI3aqWekl4O66IF7geRp9eiNiV5pkBhVr200yd6COZd9";
 
   await Firebase.initializeApp(
       name: "JobFinder",
@@ -50,6 +55,45 @@ class _MyAppState extends State<MyApp> {
     return getData();
   }
 
+  var userlat;
+  var userlon;
+
+  double sortdata(lat2, lon2) {
+    print(userlat);
+    var p = 0.017453292519943295;
+    var c = cos;
+    double a = 0.5 -
+        c((double.parse(lat2) - double.parse(userlat)) * p) / 2 +
+        c(double.parse(userlat) * p) *
+            c(double.parse(lat2) * p) *
+            (1 - c((double.parse(lon2) - double.parse(userlon)) * p)) /
+            2;
+    print(userlat);
+    return (12742 * asin(sqrt(a)));
+  }
+
+  void mustrun() async {
+    print("object");
+    var x = await getDataRegister();
+    print("bvdajsdja");
+    x.forEach((key, value) {
+      setState(() {
+        userlat = value['lat'];
+        print('print1');
+        userlon = value['lon'];
+        print('print2');
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print('initruning');
+    mustrun();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -74,8 +118,6 @@ class _MyAppState extends State<MyApp> {
                       IconButton(
                           onPressed: () async {
                             var data = await getDataRegister();
-                            print(data);
-
                             data.isNotEmpty
                                 // ignore: use_build_context_synchronously
                                 ? Navigator.pushNamed(
@@ -110,8 +152,10 @@ class _MyAppState extends State<MyApp> {
                   ),
                   body: TabBarView(
                     children: [
-                      UserForm((id, mytitle, myprice, mydescription) {
-                        postData(id, mytitle, myprice, mydescription);
+                      UserForm((id, mytitle, myprice, mydescription, location,
+                          latitude, longitude) {
+                        postData(id, mytitle, myprice, mydescription, location,
+                            latitude, longitude);
                         setState(() {
                           JobList.add(JobDetails(
                               id: id,
@@ -120,7 +164,11 @@ class _MyAppState extends State<MyApp> {
                                   'https://cdn.pixabay.com/photo/2017/12/25/16/16/creativity-3038628_960_720.jpg',
                               price: myprice,
                               description: mydescription,
-                              userid: FirebaseAuth.instance.currentUser!.uid));
+                              userid: FirebaseAuth.instance.currentUser!.uid,
+                              location: location,
+                              lat: latitude,
+                              lon: longitude,
+                              distance: 0));
                         });
                       }),
                       RefreshIndicator(
@@ -138,8 +186,15 @@ class _MyAppState extends State<MyApp> {
                                 Map? response = snapshot.data;
                                 List<JobDetails> JobList = [];
                                 response!.forEach((key, value) {
-                                  JobList.add(JobDetails.fromjson(value));
+                                  JobDetails data = JobDetails.fromjson(value);
+                                  data.distance = sortdata(data.lat, data.lon);
+                                  print(data.distance);
+                                  JobList.add(data);
                                 });
+
+                                JobList.sort((a, b) =>
+                                    a.distance!.compareTo(b.distance!.round()));
+
                                 return CardLayout(JobList);
                               })))
                     ],
@@ -160,7 +215,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         './job-description': (ctx) => JobDescription(),
         './screens/user-details': (ctx) => UserDetails(),
-        './screens/job-request': (ctx) =>  RequestDetailsScreen(),
+        './screens/job-request': (ctx) => RequestDetailsScreen(),
         './userFuture': (ctx) => UserSpecific(),
         './foredit': (ctx) => EditOpeningForm(),
       },

@@ -16,7 +16,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: DefaultTabController(
-          length: 2,
+          length: 3,
           child: Scaffold(
               appBar: AppBar(
                 title: Text("Job Requests"),
@@ -28,6 +28,10 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                   Tab(
                     icon: Icon(Icons.done_all),
                     text: "Accepted",
+                  ),
+                  Tab(
+                    icon: Icon(Icons.done_all),
+                    text: "Completed",
                   )
                 ]),
               ),
@@ -82,10 +86,39 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                         'jobname': value['jobname'],
                         'statue': value['status']
                       };
-                      if (value['statue'] != 'pending') {
+                      if (value['status'] == 'Accepted') {
+                        
                         alldata.add(zayload);
                       }
-                      ;
+                      
+                    });
+                    return FriendRequestAccpted(alldata);
+                  },
+                ),
+                FutureBuilder<Map>(
+                  future:
+                      getfriendrequest(FirebaseAuth.instance.currentUser!.uid),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    Map? payload = snapshot.data;
+                    List alldata = [];
+
+                    payload!.forEach((key, value) {
+                      Map zayload = {
+                        'key': key.toString(),
+                        'datakey': value['datakey'],
+                        'userid': value['userid'],
+                        'jobid': value['jobid'],
+                        'requesterId': value['requesterId'],
+                        'name': value['name'],
+                        'jobname': value['jobname'],
+                        'statue': value['status']
+                      };
+                      if (value['status'] == 'Completed') {
+                        alldata.add(zayload);
+                      }
                     });
                     return FriendRequestAccpted(alldata);
                   },

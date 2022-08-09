@@ -97,8 +97,12 @@ class _CardLayoutState extends State<CardLayout> {
                           ],
                         ),
                         Container(
-                            child: Row(children: [
-                              Icon(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                              Row(children: 
+                              [
+                                Icon(
                                 Icons.currency_rupee,
                                 color: Theme.of(context).primaryColor,
                                 size: 12,
@@ -109,7 +113,10 @@ class _CardLayoutState extends State<CardLayout> {
                                     fontWeight: FontWeight.normal,
                                     fontSize: 12,
                                     color: Colors.blue),
-                              )
+                              ),
+                              ],),
+                              Text(widget.joblist[index].location)
+                              
                             ]),
                             margin: EdgeInsets.all(5)),
                       ],
