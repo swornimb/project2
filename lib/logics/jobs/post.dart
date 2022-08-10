@@ -43,7 +43,7 @@ Future<Map> getDataSpecific(id) async {
 }
 
 
-Future<void> putData(id, mytitle, myprice, mydescription, keyy) async {
+Future<void> putData(id, mytitle, myprice, mydescription, keyy, location, lat, lon, userid) async {
   var url = Uri.parse(
       'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/add_jobs/${keyy}/.json');
   var response = await http.patch(url,
@@ -51,6 +51,11 @@ Future<void> putData(id, mytitle, myprice, mydescription, keyy) async {
         "title": mytitle,
         "price": myprice,
         "description": mydescription,
+        'id':id,
+        'location':location,
+        'lat':lat,
+        'lon':lon,
+        'userid':userid
       }));
   print(response.body);
 }

@@ -20,9 +20,6 @@ class EditOpeningForm extends StatelessWidget {
     myprice = value;
   }
 
-  locationInput(String value) {
-    mylocation = value;
-  }
 
   dateInput(String value) {
     mydate = value;
@@ -34,6 +31,9 @@ class EditOpeningForm extends StatelessWidget {
   late String price;
   late String location;
   late String keyy;
+  late String lat;
+  late String lon;
+  late String userid;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +46,9 @@ class EditOpeningForm extends StatelessWidget {
         description = value['description'];
         price = value['price'];
         location = value['location'];
+        lat = value['lat'];
+        lon = value['lon'];
+        userid = value['userid'];
       },
     );
     return Form(
@@ -75,18 +78,6 @@ class EditOpeningForm extends StatelessWidget {
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         label: Text("Job Description")),
-                    minLines: 5,
-                    maxLines: 50,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  child: TextFormField(
-                    onChanged: locationInput,
-                    initialValue: location,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        label: Text("Location")),
                     minLines: 5,
                     maxLines: 50,
                   ),
@@ -140,7 +131,16 @@ class EditOpeningForm extends StatelessWidget {
                                         horizontal: 20, vertical: 20))),
                             onPressed: () {
                               putData(
-                                  id, _mytitle, myprice, mydescription, keyy);
+                                id,
+                                _mytitle,
+                                myprice,
+                                mydescription,
+                                keyy,
+                                location,
+                                lat,
+                                lon,
+                                userid
+                              );
                             },
                             child: Text("Submit",
                                 style: TextStyle(fontWeight: FontWeight.bold))),

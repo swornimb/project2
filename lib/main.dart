@@ -73,13 +73,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   void mustrun() async {
-    print("object");
     var x = await getDataRegister();
-    print("bvdajsdja");
     x.forEach((key, value) {
+      print(value['lat']);
       setState(() {
         userlat = value['lat'];
-        print('print1');
+        print(userlat);
         userlon = value['lon'];
         print('print2');
       });
@@ -188,7 +187,6 @@ class _MyAppState extends State<MyApp> {
                                 response!.forEach((key, value) {
                                   JobDetails data = JobDetails.fromjson(value);
                                   data.distance = sortdata(data.lat, data.lon);
-                                  print(data.distance);
                                   JobList.add(data);
                                 });
 

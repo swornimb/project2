@@ -160,7 +160,7 @@ class _UserDetailsState extends State<UserDetails> {
                   alignment: Alignment.centerLeft,
                   margin: EdgeInsets.symmetric(vertical: 20),
                   child: Text(
-                    "Projcts Done",
+                    "Latest Projcts Done",
                     style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,

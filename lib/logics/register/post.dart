@@ -51,7 +51,9 @@ putRegiterData(data, keye, money, jobname) async {
         'imageurl': data['imageurl'],
         'uid': data['uid'],
         'wallet': (int.parse(data['wallet']) + int.parse(money)).toString(),
-        'work': jobname+","+data['work'].toString()
+        'work': jobname+","+data['work'].toString(),
+        'lat': data['lat'],
+        'lon':data['lon']
       })));
 }
 putRegiterDataReduce(data, keye, money, jobname) async {
@@ -69,7 +71,9 @@ putRegiterDataReduce(data, keye, money, jobname) async {
         'imageurl': data['imageurl'],
         'uid': data['uid'],
         'wallet': (int.parse(data['wallet']) - int.parse(money)).toString(),
-        'work': jobname+","+data['work'].toString()
+        'work': jobname+","+data['work'].toString(),
+        'lat': data['lat'],
+        'lon':data['lon']
       })));
 }
 loadmoney(data, keye, money) async {
@@ -87,7 +91,9 @@ loadmoney(data, keye, money) async {
         'imageurl': data['imageurl'],
         'uid': data['uid'],
         'wallet': (int.parse(data['wallet']) + int.parse(money)).toString(),
-        'work': data['work'].toString()
+        'work': data['work'].toString(),
+        'lat': data['lat'],
+        'lon':data['lon']
       })));
 }
 
