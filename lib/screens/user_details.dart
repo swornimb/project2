@@ -160,6 +160,21 @@ class _UserDetailsState extends State<UserDetails> {
                   alignment: Alignment.centerLeft,
                   margin: EdgeInsets.symmetric(vertical: 20),
                   child: Text(
+                    "Location",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                ),
+                Text(
+                  x[0]['location'],
+                  style: TextStyle(color: Colors.black54, height: 1.5),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
                     "Latest Projcts Done",
                     style: TextStyle(
                         color: Theme.of(context).primaryColor,

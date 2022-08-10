@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> postRegiterData(fullname, descriptionInput, location, email,
-    selected, imageurl, uid,lon,lat) async {
+    selected, imageurl, uid, lon, lat) async {
   var url = Uri.parse(
       'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/registers.json');
   await (http.post(url,
@@ -15,10 +15,10 @@ Future<void> postRegiterData(fullname, descriptionInput, location, email,
         'skills': selected,
         'imageurl': imageurl,
         'uid': uid,
-        'work':'',
-        'wallet':'0',
-        'lon':lon,
-        'lat':lat
+        'work': '',
+        'wallet': '0',
+        'lon': lon,
+        'lat': lat
       })));
 }
 
@@ -37,7 +37,6 @@ Future<Map> getDataRegisterById(id) async {
 }
 
 putRegiterData(data, keye, money, jobname) async {
-
   var url = Uri.parse(
       'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/registers/${keye}/.json');
   await (http.put(url,
@@ -51,13 +50,15 @@ putRegiterData(data, keye, money, jobname) async {
         'imageurl': data['imageurl'],
         'uid': data['uid'],
         'wallet': (int.parse(data['wallet']) + int.parse(money)).toString(),
-        'work': jobname+","+data['work'].toString(),
+        'work': jobname + "," + data['work'].toString(),
         'lat': data['lat'],
-        'lon':data['lon']
+        'lon': data['lon']
       })));
 }
-putRegiterDataReduce(data, keye, money, jobname) async {
 
+putRegiterDataReduce(data, keye, money, jobname) async {
+  print(data['work']);
+  print(jobname);
   var url = Uri.parse(
       'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/registers/${keye}/.json');
   await (http.put(url,
@@ -71,13 +72,13 @@ putRegiterDataReduce(data, keye, money, jobname) async {
         'imageurl': data['imageurl'],
         'uid': data['uid'],
         'wallet': (int.parse(data['wallet']) - int.parse(money)).toString(),
-        'work': jobname+","+data['work'].toString(),
+        'work': jobname + "," + data['work'].toString(),
         'lat': data['lat'],
-        'lon':data['lon']
+        'lon': data['lon']
       })));
 }
-loadmoney(data, keye, money) async {
 
+loadmoney(data, keye, money) async {
   var url = Uri.parse(
       'https://jobfinder-c2051-default-rtdb.asia-southeast1.firebasedatabase.app/registers/${keye}/.json');
   await (http.put(url,
@@ -93,7 +94,6 @@ loadmoney(data, keye, money) async {
         'wallet': (int.parse(data['wallet']) + int.parse(money)).toString(),
         'work': data['work'].toString(),
         'lat': data['lat'],
-        'lon':data['lon']
+        'lon': data['lon']
       })));
 }
-

@@ -81,5 +81,7 @@ class _SignUpState extends State<SignUp> {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim());
+
+        Navigator.pop(context);
   }
 }
